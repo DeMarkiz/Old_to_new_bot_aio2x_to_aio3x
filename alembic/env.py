@@ -16,7 +16,6 @@ from src.infrastructure.database.models import UserModel
 
 
 
-
 config = context.config
 
 config.set_main_option(

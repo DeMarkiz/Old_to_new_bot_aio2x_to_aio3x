@@ -1,39 +1,25 @@
-FROM python:3.10 as base
-# set work directory
-WORKDIR /app/
+FROM python:3.11-slim
 
-FROM base as docker-entrypoint
+WORKDIR /app
 
-FROM docker-entrypoint as non-root
-RUN useradd -ms /bin/bash app
-USER app
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-FROM base as requirements-builder
+# Копирование файлов зависимостей
+COPY requirements.txt .
+COPY pyproject.toml .
+COPY README.md .
 
-WORKDIR /build/
-
-RUN pip --no-cache-dir install poetry
-
-COPY pyproject.toml poetry.lock /build/
-
-RUN poetry export --without-hashes -f requirements.txt -o requirements.txt
-
-FROM non-root as app
-
-COPY --from=requirements-builder /build/requirements.txt /app/requirements.txt
-
-ENV PYTHONFAULTHANDLER=1 \
-  PYTHONUNBUFFERED=1 \
-  PIP_DISABLE_PIP_VERSION_CHECK=on \
-  PIP_DEFAULT_TIMEOUT=100
-
+# Установка зависимостей Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy project
-COPY tg_bot_template ./tg_bot_template/
+# Добавляем директорию проекта в PYTHONPATH
+ENV PYTHONPATH=/app
 
-# run app
-ENTRYPOINT ["python", "-m"]
-CMD ["tg_bot_template.bot"]
+# Применение миграций при запуске
+CMD alembic upgrade head && python -m src.interfaces.bot.main
 
-FROM app
+# Команда по умолчанию
+CMD ["python", "run_bot.py"]
