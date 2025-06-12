@@ -19,7 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONPATH=/app
 
 # Применение миграций при запуске
-CMD alembic upgrade head && python -m src.interfaces.bot.main
-
-# Команда по умолчанию
-CMD ["python", "run_bot.py"]
+CMD sh -c "alembic upgrade head && python -m src.interfaces.bot.main"
