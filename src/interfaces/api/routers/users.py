@@ -2,8 +2,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from tgbot_template.src.application.use_cases.user_management import UserManagementUseCase
-from tgbot_template.src.domain.entities.user import User
+from src.application.use_cases.user_management import UserManagementUseCase
+from src.domain.entities.user import User
 from ..dependencies import get_user_management
 from ..schemas import UserCreate, UserResponse, UserUpdate
 

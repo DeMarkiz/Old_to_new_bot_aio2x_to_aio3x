@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from tgbot_template.src.config import settings
+from src.config import settings
 from .dependencies import get_user_management
 from .routers import users
 

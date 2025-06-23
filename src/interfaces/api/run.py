@@ -1,6 +1,6 @@
 import uvicorn
 
-from tgbot_template.src.config import settings
+from src.config import settings
 from .main import app
 
 
